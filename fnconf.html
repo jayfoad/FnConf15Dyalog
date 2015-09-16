@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>
+  fuconf.md
+  
+    - Grip
+  
+</title>
+  <link rel="icon" href="/grip-static/favicon.ico" /><link rel="stylesheet" href="/grip-cache/github-d1b5abdc908e0d7b1177dec08377119b557ebf6285955d1d4b3a49990b7f2f95.css" />
+  <link rel="stylesheet" href="/grip-cache/github2-c5705f05bde95fb4053574650520682ae4d86bdaa9670bb38b6cebaea3095063.css" />
+  <style>
+    /* Page tweaks */
+    .preview-page {
+      margin-top: 64px;
+    }
+    /* Discussion tweaks */
+    .discussion-timeline.wide {
+      width: 920px;
+    }
+    .timeline-comment-wrapper > .timeline-comment:after,
+    .timeline-comment-wrapper > .timeline-comment:before {
+      content: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="preview-page">
+    <div class="container">
+      <div class="repository-with-sidebar repo-container with-full-navigation">
+
+        
+          <div class="repository-content context-loader-container">
+            <div id="readme" class="boxed-group flush clearfix announce instapaper_body md">
+              
+                <h3>
+                  <span class="octicon octicon-book"></span>
+                  fuconf.md
+                </h3>
+              
+              <div class="markdown-body entry-content">
+                <p></p>
+
+<h1>
+<a id="user-content-array-oriented-functional-programming-with-dyalog" class="anchor" href="#array-oriented-functional-programming-with-dyalog" aria-hidden="true"><span class="octicon octicon-link"></span></a>Array-oriented Functional Programming with Dyalog</h1>
+
+<h2>
+<a id="user-content-fuconf-15-apl-workshop-13-september-2015" class="anchor" href="#fuconf-15-apl-workshop-13-september-2015" aria-hidden="true"><span class="octicon octicon-link"></span></a>FuConf 15 APL Workshop 13 September 2015</h2>
+
+<h2>
+<a id="user-content-jay-foad--morten-kromberg" class="anchor" href="#jay-foad--morten-kromberg" aria-hidden="true"><span class="octicon octicon-link"></span></a>Jay Foad &amp; Morten Kromberg</h2>
+
+<p>The workshop assumes no prior knowledge of APL. It will be geared to
+functional programmers with an emphasis on theory and the core
+notation. Towards the end of the day Morten Kromberg will round off
+with a discussion about application building.</p>
+
+<p>Prerequisites: It would help if attendees installed Dyalog on their
+laptops prior to the workshop - though we will spend a little time at
+the start of the day making sure everyone is able to use APL.</p>
+
+<p>The format will include many short exercises. Feedback and discussion
+will be encouraged throughout.</p>
+
+<h1>
+<a id="user-content-morning" class="anchor" href="#morning" aria-hidden="true"><span class="octicon octicon-link"></span></a>Morning</h1>
+
+<ul>
+<li>Installing Dyalog and keyboard layouts (<a href="http://dyalog.com/apl-font-keyboard.htm">http://dyalog.com/apl-font-keyboard.htm</a>).</li>
+<li>Entering APL glyphs from the keyboard:
+
+<ul>
+<li>Click on language bar (hover for help)</li>
+<li>Use double back-tick with auto-complete (Mac/RIDE only)</li>
+<li>Use back-tick + letter (Mac/RIDE only)</li>
+<li>Use modifier keys</li>
+</ul>
+</li>
+<li>Configuration: please use <code>]box on</code>.</li>
+<li>TryAPL (<a href="http://tryapl.org/">http://tryapl.org/</a>) has a floating soft keyboard, or you can use the IME (Windows) or Mac keyboard layout.</li>
+</ul>
+
+<h2>
+<a id="user-content-introduction" class="anchor" href="#introduction" aria-hidden="true"><span class="octicon octicon-link"></span></a>Introduction</h2>
+
+<ul>
+<li>How APL evolved from a mathematical notation.</li>
+<li>Started as "Iverson notation", used on the blackboard for teaching.</li>
+<li>"A Programming Language" book published in 1962, long before it was
+implemented on any computer. (<em>Program</em> just meant <em>algorithm</em>.)</li>
+<li>Used to formally describe the System/360 at IBM.</li>
+<li>First interpreter for the 360 in 1966, developed by Ken, Larry Breed, Adin
+Falkoff, Dick Lathwell and Roger Moore.</li>
+<li>Notation had to be linearised.</li>
+<li>Most other languages (e.g. Fortran) grew from the machine up, not from
+maths down.</li>
+</ul>
+
+<h2>
+<a id="user-content-first-impressions" class="anchor" href="#first-impressions" aria-hidden="true"><span class="octicon octicon-link"></span></a>First impressions</h2>
+
+<pre><code>mean←{(+⌿⍵)÷≢⍵}
+</code></pre>
+
+<ul>
+<li>The character set: APL uses funny squiggles.</li>
+<li>Simple regular syntax.</li>
+<li><p>No reserved words in the language.</p></li>
+<li><p>Array programming is a paradigm in its own right.</p></li>
+<li>There are other APLs (APL2, NARS2000, GNU APL, NGN APL, ELI, etc), generally
+not completely compatible despite an ISO standard...</li>
+<li>and other languages in the family (A, A+, Nial, J, K etc).</li>
+</ul>
+
+<pre><code>Compare:
+
+    {(+⌿⍵)÷≢⍵}1 2 3 4  ⍝   APL
+     (+/ % #) 1 2 3 4  NB. J (Iverson-Hui)
+    {(+/x)%#x}1 2 3 4  /   k (Whitney)
+</code></pre>
+
+<p>Array languages tend to share three features:</p>
+
+<ul>
+<li>terse</li>
+<li>symbolic (not wordy)</li>
+<li>high-order functions</li>
+</ul>
+
+<blockquote>
+<p>The only program which stands a chance of being correct is a short
+  one --Arthur Whitney</p>
+</blockquote>
+
+<ul>
+<li>Primitives are carefully chosen; e.g. you get Grade instead of Sort,
+which enables <code>names[⍋ages]</code>.</li>
+</ul>
+
+<h2>
+<a id="user-content-syntax-functions-arguments-and-naming" class="anchor" href="#syntax-functions-arguments-and-naming" aria-hidden="true"><span class="octicon octicon-link"></span></a>Syntax: functions, arguments and naming</h2>
+
+<ul>
+<li>Functions are prefix or infix (<em>monadic</em> or <em>dyadic</em>) e.g. <code>-</code>
+stands for negate or subtract respectively.</li>
+<li>Unlike many languages (e.g. C, Java), this goes for user-defined
+functions too.</li>
+<li>
+<em>All</em> functions associate right: <code>3×2+1</code> is <code>3×(2+1)</code>.</li>
+</ul>
+
+<p><strong>Exercise:</strong> go through quickly as a group, introducing some scalar functions:</p>
+
+<pre><code>What do these expressions evaluate to?
+
+      3+2
+      3*2           ⍝ * is not multiplication!
+      3×2
+      9*0.5         ⍝ square root
+      6÷2
+      5-3-1         ⍝ not 1
+      1 2 3
+      -1 + 2        ⍝ not 1
+      ¯1 + 2
+      1 + 2 3
+      1 2 + 3
+      1 2 + 3 4
+      1 2 + 3 4 5   ⍝ errors: see later
+      1÷2  3÷4
+      1 (2 3) + (4 5) 6 ⍝ as if (1 1)(2 3) + (4 5)(6 6)
+</code></pre>
+
+<ul>
+<li>Conformability rules for scalar functions: vectors must have same length, or
+either argument can be a scalar ("scalar extension")</li>
+<li>Assignment uses the left arrow to name an array, <code>x←3</code>.</li>
+</ul>
+
+<p><strong>Exercise</strong> (introducing assignment):</p>
+
+<pre><code>What do these expressions do?
+
+      x←3           ⍝ result of assignment isn't printed
+      x+x
+      y+(y←4)       ⍝ R-to-L execution guaranteed here, pass through result
+      (x y z)←1 2 3
+      (x y)←y x
+</code></pre>
+
+<p><strong>Exercise</strong> (first sight of a non-scalar function):</p>
+
+<pre><code>Try these expressions:
+
+      5=2+3         ⍝ not "true" but "1"
+      A←⍳3
+      A=1 2 3
+      A≡1 2 3       ⍝ non-scalar function
+</code></pre>
+
+<h2>
+<a id="user-content-arrays" class="anchor" href="#arrays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Arrays</h2>
+
+<ul>
+<li>In APL "everything is an array", but what’s an array?
+
+<ul>
+<li>Rectangular collection of items,</li>
+<li>arranged along zero or more orthogonal axes,</li>
+<li>of numbers, characters and arrays.</li>
+</ul>
+</li>
+<li>
+<em>All</em> primitives work on arrays and return arrays.</li>
+<li>Strings are just vectors of characters.</li>
+</ul>
+
+<p><strong>Exercise</strong> (introducing some structural primitives):</p>
+
+<pre><code>Try:
+      ⍴1 2 3
+      ⍴'JAY'
+      ⍳4
+      ⍴⍳4
+      ⌽⍳4
+      4↑'BANGALORE'
+      ¯4↑'BANGALORE'
+      ⍴(1 2 3)(4 5 6)
+      ⍴'Morten' 'Kromberg'
+      5⍴'JAY'       ⍝ introduce Reshape
+      A←3 3⍴⍳9
+      A             ⍝ display is "row major"
+      ⍴A
+      ⍴⍴A
+      ⌽A
+      ⊖A            ⍝ discuss rank operator later
+      ,A
+      3 3⍴'APL'
+      2 3 4⍴⍳24     ⍝ display is in planes
+      B←2 3 4 5 6 7⍴99 ⍝ N.B. don't display this!
+      ⍴B
+      ⍴⍴B
+</code></pre>
+
+<ul>
+<li>Other languages have scalars and arrays, but in APL there is no such
+distinction.</li>
+<li>Every array has a rank. What is the rank of a scalar? Try it! What
+is the shape of a scalar? Compare with <code>⍳0</code> and <code>⍬</code>.</li>
+<li>How many items in a rank-0 array? Try <code>×/⍬</code>.</li>
+<li>APL <em>recycles</em> the word "scalar" to mean "rank-zero array".</li>
+<li>Why is a scalar an array? Because <em>everything</em> is an array! And it
+helps with consistency: reduction of matrix is vector, of vector is
+scalar.</li>
+<li>(Muse: "there's no access to the mote". See Trenchard More's papers
+on "Nested Rectangular Arrays".)</li>
+<li>Using the array as the fundamental type means that performance can
+be very good, even though it's interpreted.</li>
+</ul>
+
+<p><strong>Exercise</strong> (rank of a scalar):</p>
+
+<pre><code>Try:
+      ⍴99
+      ⍴'J'
+      ⍴⍴99
+      ⍴⍳0
+      (⍳0)≡⍴99
+      ⍬≡⍴99
+</code></pre>
+
+<ul>
+<li>Arrays have <em>value</em> semantics (they're <em>immutable</em>).</li>
+<li>This is different from almost every mainstream programming language
+that supports arrays.</li>
+<li>(Muse: this has interesting implications for the implementation,
+which is pretty much obliged to use reference counting as well as
+garbage collection.)</li>
+</ul>
+
+<h2>
+<a id="user-content-numbers" class="anchor" href="#numbers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Numbers</h2>
+
+<ul>
+<li>APL presents the illusion that "a number is just a number".</li>
+<li>Users don't have to think about data types.</li>
+<li>Under the covers there is a Scheme-like "numerical tower"
+(<a href="https://en.wikipedia.org/wiki/Numerical_tower">https://en.wikipedia.org/wiki/Numerical_tower</a>) from 1-bit packed
+booleans all the way up to 2×64-bit floating point complex.</li>
+<li>Automatic promotion on overflow; occasional demotion on heap
+compaction / garbage collection.</li>
+</ul>
+
+<p><strong>Exercise</strong> (more scalar arithmetic):</p>
+
+<pre><code>Try:
+      0 0 1 1 ∨ 0 1 0 1
+      0 0 1 1 ∧ 0 1 0 1
+      15 ∨ 35
+      15 ∧ 35
+      3÷4
+      *1
+      ○1
+      2*0.5
+      ¯1*0.5
+      3*99
+      3*999
+</code></pre>
+
+<h2>
+<a id="user-content-booleans" class="anchor" href="#booleans" aria-hidden="true"><span class="octicon octicon-link"></span></a>Booleans</h2>
+
+<ul>
+<li>Booleans are just numbers 0 and 1 (we saw this with <code>=</code>).</li>
+<li>Knuth even called this "Iverson's convention" in his paper "Two
+Notes on Notation"
+(<a href="https://www.maa.org/sites/default/files/pdf/upload_library/22/Ford/knuth403-422.pdf">https://www.maa.org/sites/default/files/pdf/upload_library/22/Ford/knuth403-422.pdf</a>).</li>
+<li>This allows useful tricks like <code>+/A&gt;0</code> (how many positive numbers
+in A?).</li>
+<li>See Scholes's blog on Data-driven Conditionals
+(<a href="http://www.dyalog.com/blog/2014/10/data-driven-conditionals-2/">http://www.dyalog.com/blog/2014/10/data-driven-conditionals-2/</a>).</li>
+<li>(Morten Kromberg calls it loop-free programming.)</li>
+<li>Coming back into fashion because of GPUs.</li>
+</ul>
+
+<p><strong>Exercise</strong> (boolean tricks):</p>
+
+<pre><code>Try:
+      A←1 ¯2 3 4 ¯5
+      A&gt;0
+      (A&gt;0)/A
+      2 3 0/'XYZ'
+      B←0 1 0 1 1 0 0 1
+      B/⍳⍴B
+</code></pre>
+
+<h2>
+<a id="user-content-defined-functions" class="anchor" href="#defined-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defined functions</h2>
+
+<ul>
+<li>Dyalog has anonymous (lambda-style) function definitions called
+<em>dfns</em>.</li>
+<li>MANY examples: <a href="http://dfns.dyalog.com">http://dfns.dyalog.com</a>
+</li>
+<li>Defined in braces, with <code>⍺</code> and <code>⍵</code> standing for the arguments.</li>
+<li>Functions have at most two arguments, but it's easy to make an
+argument tuple and decompose it with strand assignment.</li>
+</ul>
+
+<p><strong>Exercise</strong> (single line dfns):</p>
+
+<pre><code>Try:
+      {⍺+⍵}
+      3{⍺+⍵}4
+      3{⍵+⍵}4
+      {⍵+⍵}4
+      {⍺+⍺}4
+      where←{⍵/⍳⍴⍵}
+      where 0 1 0 1 1 0 0 1
+      disc←{(a b c)←⍵ ⋄ (b*2)-4×a×c}
+      disc 1 ¯1 ¯1  ⍝ (defining equation of the golden ratio)
+</code></pre>
+
+<ul>
+<li>There is only one control structure: the guard.</li>
+<li>Dfns consist of a single expression preceded by zero or more local
+definitions and guards.</li>
+<li>At a pinch, you can use diamonds to separate "lines".</li>
+<li>Use the <em>function editor</em> to define multi-line dfns. Hit ESC to exit
+the editor.</li>
+<li>The current functions is denoted <code>∇</code> to facilitate simple recursion:</li>
+</ul>
+
+<p><strong>Exercise</strong> (multi-line dfns):</p>
+
+<pre><code>Try:
+      )ed sign
+      sign←{
+        ⍵&lt;0:'negative'
+        ⍵&gt;0:'positive'
+        'zero'
+      }
+      sign 2
+      )ed fact
+      fact←{
+        ⍵=0:1
+        ⍵×∇ ⍵-1
+      }
+      fact 10
+      !10
+</code></pre>
+
+<ul>
+<li>User defined functions can Just Work on arrays of arbitrary rank!
+See dfns.easter (<a href="http://dfns.dyalog.com/n_easter.htm">http://dfns.dyalog.com/n_easter.htm</a>)</li>
+</ul>
+
+<h2>
+<a id="user-content-workspaces-and-scripts" class="anchor" href="#workspaces-and-scripts" aria-hidden="true"><span class="octicon octicon-link"></span></a>Workspaces and scripts</h2>
+
+<ul>
+<li>Introduce )save and )load as a way to take a snapshot of the VM.</li>
+</ul>
+
+<h2>
+<a id="user-content-operators" class="anchor" href="#operators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Operators</h2>
+
+<pre><code>   +/1 2 3
+</code></pre>
+
+<ul>
+<li>
+<code>/</code> here is an operator called Reduce (or fold)</li>
+<li>(Monadic) operators take a function operand on their <em>left</em>.</li>
+<li>So <code>+/</code> is "plus reduce", or "sum".</li>
+<li>Reduce inserts its operand function in the spaces: <code>1+2+3</code>
+</li>
+<li>Generalises in ways that are more useful than you might expect! (See
+<a href="http://www.dyalog.com/blog/2014/11/musings-on-reduction/">http://www.dyalog.com/blog/2014/11/musings-on-reduction/</a>)</li>
+</ul>
+
+<pre><code>Try:
+      +/2 3 4       ⍝ "summation over" (KEI)
+      ×/2 3 4       ⍝ "product over" (KEI)
+      ⌈/2 3 4
+      ≠/1 0 1 1     ⍝ parity
+</code></pre>
+
+<ul>
+<li>
+<code>¨</code> (dieresis) is an operator called Each (or map):</li>
+</ul>
+
+<pre><code>Try:
+      A←'Jay' 'Foad'
+      ⍴A
+      ⍴¨A
+      ⌽A
+      ⌽¨A
+</code></pre>
+
+<ul>
+<li>
+<code>⍨</code> is an operator called Commute (see <em>Tacit programming</em>, later):</li>
+</ul>
+
+<pre><code>Try:
+      2*3
+      2*⍨3
+      *⍨3
+</code></pre>
+
+<ul>
+<li>
+<em>Dyadic</em> operators also take an operand on the right.</li>
+<li>All dyadic operators are left-associative (cf functions).</li>
+<li>
+<code>.</code> (dot) is a <em>dyadic</em> operator called Inner Product:</li>
+</ul>
+
+<pre><code>Try:
+      1 2 3 +.× 4 5 6
+      +/ 1 2 3 × 4 5 6
+      A←2 2⍴1 2 3 4
+      A +.× A
+      +.×⍨A         ⍝ function vs operator binding makes this very neat
+      +.×/A A
+      ⍴ (2 3 4⍴⍳24) +.× (4 5 6⍴⍳120)    ⍝ arbitrary ranks
+      0.5 *⍨ 3 4 5 +.* 2                ⍝ scalar extension
+      'ABC' ∨.= 'APL'
+</code></pre>
+
+<ul>
+<li>As a special case, left operand of <code>∘</code> gives Outer Product (or table):</li>
+</ul>
+
+<pre><code>Try:
+      ∘.+ ⍨ ⍳4      ⍝ "addition table" (KEI)
+      ∘.× ⍨ ⍳4      ⍝ "multiplication table" (KEI)
+      ∘.⌈ ⍨ ⍳4      ⍝ maximum table
+      ∘.= ⍨ ⍳4      ⍝ identity matrix
+      ⍴ (2 3⍴⍳6) ∘.+ (4 5⍴⍳20)      ⍝ arbitrary ranks
+</code></pre>
+
+<ul>
+<li>
+<code>⍣</code> is a dyadic operator called power:</li>
+</ul>
+
+<pre><code>Try:
+      ({1+÷⍵}⍣10)1  ⍝ one of the few times when you need parens!
+      {1+÷⍵}⍣≡1
+</code></pre>
+
+<p><strong>Exercise</strong> explain <code>∨.=</code> (et al) in words.</p>
+
+<p><strong>Exercise</strong> explain <code>∨.∧</code> (used in transitive closure of a boolean matrix)</p>
+
+<p>Operator muse:</p>
+
+<ul>
+<li>Operators take fns or arrays as operands; creates a 3-layer food chain
+
+<ul>
+<li>Order 0: array</li>
+<li>Order 1: function, takes (array) <em>arguments</em>
+</li>
+<li>Order 2: operator, takes (array or function) <em>operands</em>
+</li>
+</ul>
+</li>
+<li>Functions are right-associative and monadic functions are prefix.</li>
+<li>Operators are  left-associative and monadic operators are postfix.</li>
+<li>Some kind of beautiful symmetry there.</li>
+<li>(But it's not completely symmetrical, because the grammar
+distinguishes monadic/dyadic operators but not monadic/dyadic
+functions.)</li>
+</ul>
+
+<h2>
+<a id="user-content-thinking-arrays" class="anchor" href="#thinking-arrays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Thinking arrays</h2>
+
+<ul>
+<li>Use brace nesting depth as an example. First show a lisp-style
+recursive algorithm; then show how to do it a whole array at a time,
+bang!</li>
+</ul>
+
+<pre><code>      ⍝ Tail recursion:
+      brace1←{
+        ⍺←⍬
+        0=≢⍵:⍺
+        (⍺,1 ¯1 0['()'⍳⊃⍵]+⊃⌽⍺)∇ 1↓⍵
+      }
+
+      ⍝ Array thinking:
+      brace2←{(+\⍵='(')-(+\⍵=')')}
+      brace3←{+\1 ¯1 0['()'⍳⍵]}
+</code></pre>
+
+<ul>
+<li>Modern processors love arrays. Arthur Whitney recommended these videos:
+
+<ul>
+<li>Bjarne Stroustrup. Vector good. Linked list bad. <a href="https://www.youtube.com/watch?v=YQs6IC-vgmo">https://www.youtube.com/watch?v=YQs6IC-vgmo</a>
+</li>
+<li>Mike Acton. Vector good. Struct &amp; object bad. <a href="https://www.youtube.com/watch?v=rX0ItVEVjHc">https://www.youtube.com/watch?v=rX0ItVEVjHc</a>
+</li>
+</ul>
+</li>
+</ul>
+
+<p><strong>Exercise</strong> Rainfall: <a href="https://medium.com/@bearsandsharks/i-failed-a-twitter-interview-52062fbb534b">https://medium.com/@bearsandsharks/i-failed-a-twitter-interview-52062fbb534b</a></p>
+
+<p><strong>Exercise</strong> Luhn credit card checksum algorithm: <a href="https://en.wikipedia.org/wiki/Luhn_algorithm">https://en.wikipedia.org/wiki/Luhn_algorithm</a></p>
+
+<h1>
+<a id="user-content-afternoon" class="anchor" href="#afternoon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Afternoon</h1>
+
+<h2>
+<a id="user-content-reading-apl" class="anchor" href="#reading-apl" aria-hidden="true"><span class="octicon octicon-link"></span></a>Reading APL</h2>
+
+<p>How to understand a line of APL: a detailed look at the game of life
+one-liner <a href="http://dfns.dyalog.com/n_life.htm">http://dfns.dyalog.com/n_life.htm</a>
+<a href="http://www.youtube.com/watch?v=a9xAKttWgP4">http://www.youtube.com/watch?v=a9xAKttWgP4</a></p>
+
+<ul>
+<li><code>life←{↑1 ⍵∨.∧3 4=+/,¯1 0 1∘.⊖¯1 0 1∘.⌽⊂⍵}</code></li>
+<li>Try it out in small chunks, starting from the right.</li>
+<li>Split it into <em>named</em> small chunks on several lines.</li>
+<li>Know what's a function and what's an operator.</li>
+<li>Note the creative use of inner product.</li>
+<li>Finally try reading it from left to right.</li>
+</ul>
+
+<p>Other one-liners:</p>
+
+<ul>
+<li>
+<code>(2×a)÷⍨(-b)(+,-)0.5\*⍨(b*2)-4×a×c</code> ("2 times a divided into minus b
+plus or minus the square root of [the discriminant] b squared minus
+4 a c")</li>
+<li>Find primes from 1 to R: <code>(~R∊R∘.×R)/R←1↓⍳R</code>
+</li>
+<li>Or <code>{(~R∊R∘.×R)/R←1↓⍳⍵}</code>
+</li>
+<li>Or <code>{{(~⍵∊⍵∘.×⍵)/⍵}1↓⍳⍵}</code>
+</li>
+<li>Or <code>{(~⍵∊⍵∘.×⍵)/⍵}∘{1↓⍳⍵}</code>
+</li>
+</ul>
+
+<p>Quirks that you may notice:</p>
+
+<ul>
+<li>Some APL programmers like to avoid parentheses, to reduce the
+cognitive load!</li>
+<li>Hence, put simple argument on left: <code>1+expr</code>, <code>0&lt;expr</code>
+</li>
+<li>Or, use Commute: <code>2*⍨...</code>
+</li>
+<li>N.B. game of life has no parentheses, partly because (some)
+primitives (e.g. Residue) were carefully designed to be most useful
+with a simple constant on the <em>left</em>.</li>
+<li>See also <em>Code Golf</em>.</li>
+</ul>
+
+<h2>
+<a id="user-content-nested-arrays" class="anchor" href="#nested-arrays" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nested arrays</h2>
+
+<ul>
+<li>Enclose (monadic <code>⊂</code>) boxes any array into a scalar enclosure.</li>
+<li>First (monadic <code>⊃</code>) is a handy inverse.</li>
+<li>Enclose of a simple scalar is unchanged: turtles all the way down.</li>
+<li>⍴⊂ is a handy idiom for constructing nested arrays: <code>3⍴⊂'Jay'</code>.</li>
+<li>Depth of an array is the level of nesting (0 for simple scalar).</li>
+<li>Mix and Split trade off rank for depth.</li>
+<li>Prototypical items.</li>
+</ul>
+
+<h2>
+<a id="user-content-indexing-and-partial-assignment" class="anchor" href="#indexing-and-partial-assignment" aria-hidden="true"><span class="octicon octicon-link"></span></a>Indexing and partial assignment</h2>
+
+<ul>
+<li>Show Pick: <code>5⊃vec</code>, <code>(⊂2 3)⊃mat</code>
+</li>
+<li>Show Squad: <code>5⌷vec</code>, <code>2 3⌷mat</code>
+</li>
+<li>Finally show the anomalous syntax for bracket indexing: <code>vec[5]</code>, <code>mat[2;3]</code>
+</li>
+<li>N.B. bracket indexing can't be used as an operand function :-(</li>
+<li><p>Using an array <em>inside</em> the brackets can be very useful: <code>'.⌹'[mat]</code></p></li>
+<li><p>Indexed assignment works intuitively: <code>vec[3]←99</code></p></li>
+<li>N.B. arrays still have <strong>value</strong> semantics; other namings of the
+same array are <em>not</em> affected.</li>
+<li>Selective assignment: <code>(3↑vec)←4 5 6</code> <em>also</em> works intuitively!</li>
+<li>But N.B. only for "structural" primitive functions; you can't do <code>(0×A)←1</code>.</li>
+</ul>
+
+<h2>
+<a id="user-content-defined-operators" class="anchor" href="#defined-operators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defined operators</h2>
+
+<ul>
+<li>Lambda-style operator definition with <code>⍺⍺</code> and <code>⍵⍵</code>.</li>
+<li>(Really defines the <em>derived function</em>, not the operator, because
+you have access to <code>⍺</code> and <code>⍵</code> too.)</li>
+</ul>
+
+<pre><code>Try:
+      double←{2×⍵}
+      twice←{⍺⍺ ⍺⍺ ⍵}
+      double twice 3
+</code></pre>
+
+<h2>
+<a id="user-content-procedures" class="anchor" href="#procedures" aria-hidden="true"><span class="octicon octicon-link"></span></a>Procedures</h2>
+
+<blockquote>
+<p>Unfortunately, however, APL still splits programming into a world of
+  expressions and a world of statements.  Thus the effort to write
+  one-line programs is partly motivated by the desire to stay in the
+  more orderly world of expressions. --John Backus, "Can Programming
+  Be Liberated from the von Neumann Style?"</p>
+</blockquote>
+
+<ul>
+<li>APL had tradfns long before dfns.</li>
+<li>The only control flow was <code>→</code> (goto).</li>
+<li>Control structures (<code>:If</code> etc) improved life a little.</li>
+<li>Variables had dynamic scope.</li>
+</ul>
+
+<h2>
+<a id="user-content-error-trapping" class="anchor" href="#error-trapping" aria-hidden="true"><span class="octicon octicon-link"></span></a>Error trapping</h2>
+
+<ul>
+<li>Error guards in dfns.</li>
+<li>
+<code>:Trap</code> in tradfns.</li>
+</ul>
+
+<h2>
+<a id="user-content-interactive-debugging" class="anchor" href="#interactive-debugging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Interactive debugging</h2>
+
+<ul>
+<li>Using the tracer to step through code.</li>
+<li>Using the session to examine variables.</li>
+<li>Edit windows on variables show live updates.</li>
+</ul>
+
+<h2>
+<a id="user-content-schisms" class="anchor" href="#schisms" aria-hidden="true"><span class="octicon octicon-link"></span></a>Schisms</h2>
+
+<blockquote>
+<p>"Should array indices start at 0 or 1? My compromise of 0.5 was
+  rejected without, I thought, proper consideration." --Stan Kelly
+  Bootle</p>
+</blockquote>
+
+<ul>
+<li>Index origin can be 0 or 1 (everyone agrees it shouldn't be
+settable, but they don't agree what it should be).</li>
+<li>Floating vs grounded array theory.</li>
+<li>APL2 (axis "operator") vs Rationalised APL (rank operator).</li>
+</ul>
+
+<h2>
+<a id="user-content-tacit-programming" class="anchor" href="#tacit-programming" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tacit programming</h2>
+
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Tacit_programming">https://en.wikipedia.org/wiki/Tacit_programming</a></li>
+<li>Syntax of function trains (need some compelling examples)</li>
+<li>Tacit or "point free" forms:
+
+<ul>
+<li>Compose</li>
+<li>Commute</li>
+<li>Atop</li>
+<li>Fork</li>
+<li>Right operand currying</li>
+</ul>
+</li>
+</ul>
+
+<p><strong>Exercise</strong> what does this do:</p>
+
+<pre><code>      (∨/ ≤ ∧/) booleanvector
+</code></pre>
+
+<p>(Answer: it checks for all zeros OR all ones.)</p>
+
+<h2>
+<a id="user-content-namespaces" class="anchor" href="#namespaces" aria-hidden="true"><span class="octicon octicon-link"></span></a>Namespaces</h2>
+
+<ul>
+<li>What’s an array, revised:
+
+<ul>
+<li>Rectangular collection of items,</li>
+<li>arranged along zero or more orthogonal axes,</li>
+<li>of numbers, characters, arrays <strong>and refs</strong>.</li>
+</ul>
+</li>
+<li>Create a namespace with <code>⎕NS''</code> (see <em>System functions</em> below).</li>
+<li>Syntax is extremely general:</li>
+</ul>
+
+<pre><code>      ns.name
+      ns.(expr)
+      (ns1 ns2).(expr)
+</code></pre>
+
+<ul>
+<li>Examples:</li>
+</ul>
+
+<pre><code>      1 2 3  (p q r).f  4 5 6
+</code></pre>
+
+<h2>
+<a id="user-content-system-functions" class="anchor" href="#system-functions" aria-hidden="true"><span class="octicon octicon-link"></span></a>System functions</h2>
+
+<ul>
+<li>Provide I/O, system interfaces etc. Roughly equivalent to C standard library.</li>
+<li>Mention <code>⎕FREAD</code>, <code>⎕NREAD</code>, <code>⎕XML</code>, <code>⎕R</code>/<code>⎕S</code>, ...</li>
+</ul>
+
+<h2>
+<a id="user-content-building-applications" class="anchor" href="#building-applications" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building applications</h2>
+
+<ul>
+<li>Turn one of our exercises into a web page or service with MiServer ?</li>
+</ul>
+
+              </div>
+            </div>
+          </div>
+        
+
+      </div>
+    </div>
+  </div>
+  <div>&nbsp;</div>
+  </div><script>
+    function showCanonicalImages() {
+      var images = document.getElementsByTagName('img');
+      if (!images) {
+        return;
+      }
+      for (var index = 0; index < images.length; index++) {
+        var image = images[index];
+        if (image.getAttribute('data-canonical-src')) {
+          image.src = image.getAttribute('data-canonical-src');
+        }
+      }
+    }
+    function scrollToHash() {
+      if (location.hash && !document.querySelector(":target")) {
+        var element = document.getElementById('user-content-' + location.hash.slice(1));
+        if (element) {
+           element.scrollIntoView();
+        }
+      }
+    }
+    window.onhashchange = function() {
+      scrollToHash();
+    }
+    window.onload = function() {
+      scrollToHash();
+    }
+    showCanonicalImages();
+  </script>
+</body>
+</html>
